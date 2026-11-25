@@ -1,0 +1,88 @@
+#include <stdio.h>
+
+#define MAX 50
+
+int main(void) {
+    float voltage[MAX], current[MAX], v, curr, r;
+    int count = 0, choice, sno, i;
+
+    do {
+        printf("\n=== LAB READINGS RECORDER ===\n");
+        printf("1. Add reading (voltage, current)\n");
+        printf("2. View all readings with resistance (R = V/I)\n");
+        printf("3. Search reading by S.No.\n");
+        printf("4. Exit\n");
+        printf("Enter choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1: /* Add reading */
+                if (count >= MAX) {
+                    printf("Error: Array is full (max %d readings).\n", MAX);
+                } else {
+                    printf("Enter Voltage (V): ");
+                    scanf("%f", &v);
+                    printf("Enter Current (A): ");
+                    scanf("%f", &curr);
+
+                    voltage[count] = v;
+                    current[count] = curr;
+                    count++;
+                    printf("Added! Assigned S.No.: %d\n", count);
+                }
+                break;
+
+            case 2: /* View all readings with R = V/I */
+                if (count == 0) {
+                    printf("No readings recorded yet.\n");
+                } else {
+                    printf("\n%-6s %-14s %-14s %-16s\n",
+                           "S.No.", "Voltage (V)", "Current (A)", "Resistance (Ohm)");
+                    for (i = 0; i < count; i++) {
+                        if (current[i] != 0.0f) {
+                            r = voltage[i] / current[i];
+                            printf("%-6d %-14.2f %-14.2f %-16.2f\n",
+                                   i + 1, voltage[i], current[i], r);
+                        } else {
+                            printf("%-6d %-14.2f %-14.2f %-16s\n",
+                                   i + 1, voltage[i], current[i], "Undefined (I = 0)");
+                        }
+                    }
+                }
+                break;
+
+            case 3: /* Search by S.No. */
+                if (count == 0) {
+                    printf("No readings recorded yet.\n");
+                } else {
+                    printf("Enter S.No. to search (1-%d): ", count);
+                    scanf("%d", &sno);
+
+                    if (sno < 1 || sno > count) {
+                        printf("S.No. not found.\n");
+                    } else {
+                        i = sno - 1;
+                        if (current[i] != 0.0f) {
+                            r = voltage[i] / current[i];
+                            printf("S.No. %d | Voltage: %.2f V | Current: %.2f A | Resistance: %.2f Ohms\n",
+                                   sno, voltage[i], current[i], r);
+                        } else {
+                            printf("S.No. %d | Voltage: %.2f V | Current: %.2f A | Resistance: Undefined (I = 0)\n",
+                                   sno, voltage[i], current[i]);
+                        }
+                    }
+                }
+                break;
+
+            case 4:
+                printf("Exiting program.\n");
+                break;
+
+            default:
+                printf("Invalid choice. Please enter 1 to 4.\n");
+                break;
+        }
+    } while (choice != 4);
+
+    return 0;
+}
